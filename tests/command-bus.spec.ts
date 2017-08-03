@@ -1,23 +1,23 @@
 import { MessageBus } from '../src/message-bus';
 import { CommandBus } from '../src/command-bus';
-import { NO_PROPER_MIDDLEWARE } from '../src/middleware';
-import { NO_PROPER_HANDLER } from '../src/message-handler';
-import { NO_PROPER_MESSAGE } from '../src/message';
-import { registerAbstractTests } from './message-bus-abstract-spec';
+import { NOT_PROPER_MIDDLEWARE } from '../src/middleware';
+import { NOT_PROPER_HANDLER } from '../src/message-handler';
+import { NOT_PROPER_MESSAGE } from '../src/message';
+import { registerAbstractTests } from './message-bus.abstract-spec';
 
 describe('CommandBus', () => {
     const shared: {
-        bus?: MessageBus;
+        busFactory?(): MessageBus;
     } = {};
 
     beforeEach(() => {
-        shared.bus = new CommandBus();
+        shared.busFactory = () => new CommandBus();
     });
 
     registerAbstractTests(shared);
 
     it('should allow to register only one handler per type', () => {
-        const bus = new CommandBus();
+        const bus = shared.busFactory();
 
         bus.registerHandler('foo', () => { });
         expect(() => bus.registerHandler('foo', () => { }))
@@ -25,7 +25,7 @@ describe('CommandBus', () => {
     });
 
     it('should throw an error if no handler is registered for command being handled', () => {
-        const bus = new CommandBus();
+        const bus = shared.busFactory();
 
         bus.registerHandler('bar', () => { });
         expect(() => bus.handle({ type: 'foo' }, () => { }))
@@ -33,7 +33,7 @@ describe('CommandBus', () => {
     });
 
     it('should execute all async middlewares in the right order before executing the actual handler', (done) => {
-        const bus = new CommandBus();
+        const bus = shared.busFactory();
 
         let executed = [];
         let handledMessage;
@@ -73,7 +73,7 @@ describe('CommandBus', () => {
     });
 
     it('should execute handler directly if there are no middlewares', (done) => {
-        const bus = new CommandBus();
+        const bus = shared.busFactory();
         let handledMessage;
 
         bus.registerHandler('lorem', (message, next) => {
@@ -89,7 +89,7 @@ describe('CommandBus', () => {
     });
 
     it('should pass error callback to command handler', (done) => {
-        const bus = new CommandBus();
+        const bus = shared.busFactory();
 
         bus.registerHandler('lorem', (message, callback, error) => {
             error('Error C');

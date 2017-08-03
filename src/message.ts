@@ -4,4 +4,4 @@ export interface Message {
     readonly type: string;
 }
 
-export const NO_PROPER_MESSAGE = 'Provided value does not look like proper message.';
+export const NOT_PROPER_MESSAGE = 'Provided value does not look like proper message.';

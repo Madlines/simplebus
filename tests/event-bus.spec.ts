@@ -1,22 +1,23 @@
 import { MessageBus } from '../src/message-bus';
 import { EventBus } from '../src/event-bus';
-import { NO_PROPER_MESSAGE } from '../src/message';
-import { registerAbstractTests } from './message-bus-abstract-spec';
+import { NOT_PROPER_MESSAGE } from '../src/message';
+import { registerAbstractTests } from './message-bus.abstract-spec';
 
 describe('EventBus', () => {
     const shared: {
-        bus?: MessageBus;
+        busFactory?(): MessageBus;
     } = {};
 
     beforeEach(() => {
-        shared.bus = new EventBus();
+        shared.busFactory = () => new EventBus();
     });
 
     registerAbstractTests(shared);
 
     it('should just trigger success callback no handler is registered for command being handled', (done) => {
-        shared.bus.registerHandler('bar', () => { });
-        shared.bus.handle({ type: 'foo' }, () => {
+        const bus = shared.busFactory();
+        bus.registerHandler('bar', () => { });
+        bus.handle({ type: 'foo' }, () => {
             done();
         });
     });
@@ -25,33 +26,35 @@ describe('EventBus', () => {
         const executedMiddlewares = [];
         const handledMessages = [];
 
-        shared.bus.registerMiddleware((message, next) => {
+        const bus = shared.busFactory();
+
+        bus.registerMiddleware((message, next) => {
             executedMiddlewares.push({ A: message });
             next();
         });
 
-        shared.bus.registerMiddleware((message, next) => {
+        bus.registerMiddleware((message, next) => {
             executedMiddlewares.push({ B: message });
             next();
         });
 
-        shared.bus.registerMiddleware((message, next) => {
+        bus.registerMiddleware((message, next) => {
             executedMiddlewares.push({ C: message });
             next();
         });
 
-        shared.bus.registerHandler('lorem', (message, next) => {
+        bus.registerHandler('lorem', (message, next) => {
             handledMessages.push({ X: message });
             next();
         });
 
-        shared.bus.registerHandler('lorem', (message, next) => {
+        bus.registerHandler('lorem', (message, next) => {
             handledMessages.push({ Y: message });
             next();
         });
 
         const message = { type: 'lorem', foo: 'bar' };
-        shared.bus.handle(message, () => {
+        bus.handle(message, () => {
             expect(executedMiddlewares).toEqual([
                 { A: message },
                 { B: message },
@@ -68,19 +71,20 @@ describe('EventBus', () => {
 
     it('should execute handlers directly if there are no middlewares', (done) => {
         const handledMessages = [];
+        const bus = shared.busFactory();
 
-        shared.bus.registerHandler('lorem', (message, next) => {
+        bus.registerHandler('lorem', (message, next) => {
             handledMessages.push({ A: message });
             next();
         });
 
-        shared.bus.registerHandler('lorem', (message, next) => {
+        bus.registerHandler('lorem', (message, next) => {
             handledMessages.push({ B: message });
             next();
         });
 
         const message = { type: 'lorem', foo: 'bar' };
-        shared.bus.handle(message, () => {
+        bus.handle(message, () => {
             expect(handledMessages[0]).toEqual({ A: message });
             expect(handledMessages[1]).toEqual({ B: message });
             done();
@@ -88,11 +92,13 @@ describe('EventBus', () => {
     });
 
     it('should pass error callback to event handler', (done) => {
-        shared.bus.registerHandler('lorem', (message, callback, error) => {
+        const bus = shared.busFactory();
+
+        bus.registerHandler('lorem', (message, callback, error) => {
             error('Error C');
         });
 
-        shared.bus.handle({ type: 'lorem' }, () => {
+        bus.handle({ type: 'lorem' }, () => {
             fail('Success callback should not be called in this scenario.');
             done();
         }, (error) => {

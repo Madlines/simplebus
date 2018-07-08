@@ -1,7 +1,6 @@
-import { MessageBus } from '../src/message-bus';
-import { EventBus } from '../src/event-bus';
-import { NOT_PROPER_MESSAGE } from '../src/message';
-import { registerAbstractTests } from './message-bus.abstract-spec';
+import {MessageBus} from '../src/MessageBus';
+import {EventBus} from '../src/EventBus';
+import {registerAbstractTests} from './MessageBus.abstract-spec';
 
 describe('EventBus', () => {
     const shared: {
@@ -22,7 +21,7 @@ describe('EventBus', () => {
         });
     });
 
-    it('should execute all async middlewares in the right order before executing the actual handlers', (done) => {
+    it('should execute all async middleware in the right order before executing the actual handlers', (done) => {
         const executedMiddlewares = [];
         const handledMessages = [];
 
@@ -69,7 +68,7 @@ describe('EventBus', () => {
 
     });
 
-    it('should execute handlers directly if there are no middlewares', (done) => {
+    it('should execute handlers directly if there are no middleware', (done) => {
         const handledMessages = [];
         const bus = shared.busFactory();
 

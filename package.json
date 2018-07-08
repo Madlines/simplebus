@@ -1,6 +1,11 @@
 {
   "name": "madlines-simplebus",
   "version": "0.10.0",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "build-and-test": "npm run build && npm test"
+  },
   "devDependencies": {
     "@types/jest": "^19.2.2",
     "jest": "^19.0.2",

@@ -1,9 +1,9 @@
-import {Message} from './message';
-import {MessageBus} from './message-bus';
-import {MessageHandler} from './message-handler';
+import {Message} from './Message';
+import {MessageBus} from './MessageBus';
+import {MessageHandler} from './MessageHandler';
 
 export class CommandBus extends MessageBus {
-    registerHandler(type: string, handler: MessageHandler): void {
+    registerHandler<T extends Message>(type: string, handler: MessageHandler<T>): void {
         if (this.handlers[type] && this.handlers[type].length) {
             throw new Error('Handler for type ' + type + ' is already registered.');
         }

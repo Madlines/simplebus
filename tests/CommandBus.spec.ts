@@ -1,9 +1,6 @@
-import { MessageBus } from '../src/message-bus';
-import { CommandBus } from '../src/command-bus';
-import { NOT_PROPER_MIDDLEWARE } from '../src/middleware';
-import { NOT_PROPER_HANDLER } from '../src/message-handler';
-import { NOT_PROPER_MESSAGE } from '../src/message';
-import { registerAbstractTests } from './message-bus.abstract-spec';
+import {MessageBus} from '../src/MessageBus';
+import {CommandBus} from '../src/CommandBus';
+import {registerAbstractTests} from './MessageBus.abstract-spec';
 
 describe('CommandBus', () => {
     const shared: {
@@ -32,7 +29,7 @@ describe('CommandBus', () => {
             .toThrow('No handler is registered for message of type foo');
     });
 
-    it('should execute all async middlewares in the right order before executing the actual handler', (done) => {
+    it('should execute all async middleware in the right order before executing the actual handler', (done) => {
         const bus = shared.busFactory();
 
         let executed = [];
@@ -72,7 +69,7 @@ describe('CommandBus', () => {
 
     });
 
-    it('should execute handler directly if there are no middlewares', (done) => {
+    it('should execute handler directly if there are no middleware', (done) => {
         const bus = shared.busFactory();
         let handledMessage;
 

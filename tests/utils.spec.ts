@@ -1,27 +1,28 @@
-import {FUNCTION_FROM_THIS_SET_HAS_BEEN_ALREADY_CALLED, isFunction, isPromise, oneOfOneTime,} from '../src/utils';
 import createSpy = jasmine.createSpy;
+import {Util} from '../src/Util';
+
 test('isFunction() should properly detect functions', () => {
-    expect(isFunction({})).toBe(false);
-    expect(isFunction(setTimeout)).toBe(true);
+    expect(Util.isFunction({})).toBe(false);
+    expect(Util.isFunction(setTimeout)).toBe(true);
 });
 
 test('isPromise() should properly detect promises using duck typing', () => {
-    expect(isPromise({'then': () => {}, 'catch': () => {}})).toBe(true);
-    expect(isPromise({'catch': () => {}})).toBe(false);
-    expect(isPromise({'then': () => {}})).toBe(false);
+    expect(Util.isPromise({'then': () => {}, 'catch': () => {}})).toBe(true);
+    expect(Util.isPromise({'catch': () => {}})).toBe(false);
+    expect(Util.isPromise({'then': () => {}})).toBe(false);
 });
 
-test('oneOfOneTime should only allow to call one of prepared function and one time only', () => {
-    const foo = (x) => {};
-    const bar = (x) => {};
+test('oneOfOneTime() should only allow to call one of prepared function and one time only', () => {
+    const foo = () => {};
+    const bar = () => {};
 
     const spyFoo = createSpy('foo', foo);
-    const oneTimers = oneOfOneTime({foo: spyFoo, bar});
+    const oneTimers = Util.oneOfOneTime({foo: spyFoo, bar});
 
     oneTimers.foo('qwe');
 
-    expect(() => oneTimers.foo('lorem')).toThrow(FUNCTION_FROM_THIS_SET_HAS_BEEN_ALREADY_CALLED);
-    expect(() => oneTimers.bar('ipsum')).toThrow(FUNCTION_FROM_THIS_SET_HAS_BEEN_ALREADY_CALLED);
+    expect(() => oneTimers.foo('lorem')).toThrow(Util.FUNCTION_FROM_THIS_SET_HAS_BEEN_ALREADY_CALLED);
+    expect(() => oneTimers.bar('ipsum')).toThrow(Util.FUNCTION_FROM_THIS_SET_HAS_BEEN_ALREADY_CALLED);
 
     expect(spyFoo).toBeCalledWith('qwe');
     expect(spyFoo).toHaveBeenCalledTimes(1);

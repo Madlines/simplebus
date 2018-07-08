@@ -1,18 +1,17 @@
-import { MessageBus } from '../src/message-bus';
-import { NOT_PROPER_HANDLER } from '../src/message-handler';
-import { NOT_PROPER_MIDDLEWARE } from '../src/middleware';
+import {MessageHandler} from '../src/MessageHandler';
+import {Middleware} from '../src/Middleware';
 
 export const registerAbstractTests = (shared) => {
     it('should only allow to register handlers that look like handlers',  () => {
         const bus = shared.busFactory();
         bus.registerHandler('foo', () => { });
-        expect(() => bus.registerHandler.call(bus, 'bar', 'notAHandler')).toThrow(NOT_PROPER_HANDLER);
+        expect(() => bus.registerHandler.call(bus, 'bar', 'notAHandler')).toThrow(MessageHandler.NOT_PROPER_HANDLER);
     });
 
-    it('should only allow to register middlewares that look like middlewares', () => {
+    it('should only allow to register middleware that look like middleware', () => {
         const bus = shared.busFactory();
         bus.registerMiddleware(() => { });
-        expect(() => bus.registerMiddleware.call(bus, 'notAMiddleware')).toThrow(NOT_PROPER_MIDDLEWARE);
+        expect(() => bus.registerMiddleware.call(bus, 'notAMiddleware')).toThrow(Middleware.NOT_PROPER_MIDDLEWARE);
     });
 
     it('should only handle something that looks like message', () => {
@@ -21,7 +20,7 @@ export const registerAbstractTests = (shared) => {
             .toThrow('Provided value does not look like proper message.');
     });
 
-    it('should stop processing message if one of middlewares will trigger error callback', (done: Function) => {
+    it('should stop processing message if one of middleware will trigger error callback', (done: Function) => {
         const bus = shared.busFactory();
         const executed = [];
         let handledMessage;
@@ -109,7 +108,7 @@ export const registerAbstractTests = (shared) => {
         const message = {type: 'amet'};
         bus.handle(message, () => {
             done();
-        }, (err) => {
+        }, () => {
             fail('Error callback should not be called in this scenario');
         });
     });

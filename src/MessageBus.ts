@@ -1,16 +1,16 @@
-import {isMessageHandler, MessageHandler, NOT_PROPER_HANDLER} from './message-handler';
-import {isMessage, Message, NOT_PROPER_MESSAGE} from './message';
-import {isMiddleware, Middleware, NOT_PROPER_MIDDLEWARE} from './middleware';
-import {isPromise, oneOfOneTime} from './utils';
+import {MessageHandler} from './MessageHandler';
+import {Message} from './Message';
+import {Middleware} from './Middleware';
+import {Util} from './Util';
 
 export abstract class MessageBus {
-    protected handlers = {}; // TODO typings for that
-    protected middlewares: Middleware[] = [];
+    protected handlers: { [k: string]: MessageHandler<Message>[] } = {};
+    protected middleware: Middleware[] = [];
     protected defaultErrorHandler: Function;
 
-    registerHandler(type: string, handler: MessageHandler): void {
-        if (false === isMessageHandler(handler)) {
-            throw new Error(NOT_PROPER_HANDLER);
+    registerHandler<T extends Message>(type: string, handler: MessageHandler<T>): void {
+        if (false === MessageHandler.isMessageHandler(handler)) {
+            throw new Error(MessageHandler.NOT_PROPER_HANDLER);
         }
 
         this.handlers[type] = this.handlers[type] || [];
@@ -18,11 +18,11 @@ export abstract class MessageBus {
     }
 
     registerMiddleware(middleware: Middleware): void {
-        if (false === isMiddleware(middleware)) {
-            throw new Error(NOT_PROPER_MIDDLEWARE);
+        if (false === Middleware.isMiddleware(middleware)) {
+            throw new Error(Middleware.NOT_PROPER_MIDDLEWARE);
         }
 
-        this.middlewares.push(middleware);
+        this.middleware.push(middleware);
     }
 
     handle(message: Message, next: Function, error?: Function): void {
@@ -35,8 +35,8 @@ export abstract class MessageBus {
     }
 
     protected verifyMessage(message) {
-        if (false === isMessage(message)) {
-            throw new Error(NOT_PROPER_MESSAGE);
+        if (false === Message.isMessage(message)) {
+            throw new Error(Message.NOT_PROPER_MESSAGE);
         }
     }
 
@@ -44,15 +44,14 @@ export abstract class MessageBus {
         const handlers = this.handlers[message.type] ? this.handlers[message.type].slice() : [];
         const errorCallback = error || this.defaultErrorHandler || (() => {});
 
-        processMiddlewares(this.middlewares, message, () => {
+        processMiddlewares(this.middleware, message, () => {
             const nextHandler = (() => {
                 const handler = handlers.shift();
                 if (handler) {
-
-                    const callbacks = oneOfOneTime({errorCallback, nextHandler});
+                    const callbacks = Util.oneOfOneTime({errorCallback, nextHandler});
                     const result = handler.call(undefined, message, callbacks.nextHandler, callbacks.errorCallback);
 
-                    if (isPromise(result)) {
+                    if (Util.isPromise(result)) {
                         result.then(callbacks.nextHandler, callbacks.errorCallback);
                     }
                 } else {
@@ -68,7 +67,7 @@ export abstract class MessageBus {
 const processMiddlewares = (middlewares: Middleware[], message: Message, callback: Function, error: Function) => {
     const middlewaresCopy = middlewares.slice();
     const next = () => {
-        const callbacks = oneOfOneTime({callback, next, error});
+        const callbacks = Util.oneOfOneTime({callback, next, error});
         const middleware = middlewaresCopy.shift();
         if (middleware) {
             middleware.call(undefined, message, callbacks.next, callbacks.error);

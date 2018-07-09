@@ -68,9 +68,9 @@ function onError(e) {
 ```
 
 ## Event Bus
-Event Bus works almost the same way as Command Bus but you can register multiple event handler per one type of event or you can register no event handlers.
+Event Bus works almost the same way as Command Bus but you can register multiple event handlers per one type of event or you can register no event handlers at all.
 During runtime you can tell Event Bus to handle an event.
-Event Bus will execute every handler associated with given type of event and execute them all - one after another.
+Event Bus will find every handler associated with given type of event and execute them all - one after another.
 
 Example:
 
@@ -88,12 +88,12 @@ interface TheThinkJustHappenedEvent extends Message {
 const eventBus = new EventBus();
 
 eventBus.registerHandler<TheThinkJustHappenedEvent>('THE_THINK_JUST_HAPPENED', (event) => {
-    console.log('Doing something as a reaction to with this result: ' + event.payload.result);
+    console.log('Doing something as a reaction to an event with this result: ' + event.payload.result);
     return Promise.resolve();
 });
 
 eventBus.registerHandler<TheThinkJustHappenedEvent>('THE_THINK_JUST_HAPPENED', (event, next) => {
-    console.log('Doing something else as a reaction to with this result: ' + event.payload.result);
+    console.log('Doing something else as a reaction to an event with this result: ' + event.payload.result);
     next();
 });
 
@@ -116,7 +116,7 @@ function onError(e) {
 ```
 
 ## Middleware
-You can register any number of middlewars in a command bus.
+You can register any number of middleware in a command bus.
 Each of them will be executed - one after another - when you tell a message bus to handle any kind of message.
 When all middleware are done message will be moved to proper handler or handlers.
 

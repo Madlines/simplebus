@@ -1,6 +1,6 @@
 {
   "name": "madlines-simplebus",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "scripts": {
     "build": "tsc",
     "test": "jest",

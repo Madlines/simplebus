@@ -148,3 +148,20 @@ commandBus.registerDefaultErrorHandler((e) => {
     console.error(e);
 });
 ```
+## Unregistering handlers
+To unregister previously registered handler use `unregisterHandler` method and pass
+the same set of params as you passed to `registerHandler` method.
+```
+import {EventBus, Message} from 'madlines-simplebus';
+const eventBus = new EventBus(); // works the same for CommandBus as well
+const handler = (message) => {
+    // The handler's code goes here...
+};
+
+
+eventBus.registerHandler('myEventType', handler);
+// later on
+eventBus.unregisterHandler('myEventType', handler);
+
+```
+

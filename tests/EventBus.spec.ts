@@ -105,4 +105,16 @@ describe('EventBus', () => {
             done();
         });
     });
+
+    it('should allow to unregister previously registered handler', () => {
+        const bus = shared.busFactory();
+        const handler = () => {
+            fail('This should not be called if we unregistered this handler');
+        };
+
+        bus.registerHandler('test', handler);
+        bus.unregisterHandler('test', handler);
+
+        bus.handle({type: 'test'}, () => void 0);
+    });
 });

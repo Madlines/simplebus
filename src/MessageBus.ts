@@ -17,6 +17,14 @@ export abstract class MessageBus {
         this.handlers[type].push(handler);
     }
 
+    unregisterHandler<T extends Message>(type: string, handler: MessageHandler<T>): void {
+        if (!this.handlers[type]) {
+            return;
+        }
+
+        this.handlers[type] = this.handlers[type].filter(registeredHandler => registeredHandler !== handler);
+    }
+
     registerMiddleware(middleware: Middleware): void {
         if (false === Middleware.isMiddleware(middleware)) {
             throw new Error(Middleware.NOT_PROPER_MIDDLEWARE);

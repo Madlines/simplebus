@@ -100,4 +100,23 @@ describe('CommandBus', () => {
             done();
         });
     });
+
+
+    it('should allow to unregister previously registered handler', () => {
+        const bus = shared.busFactory();
+        const handler = () => {
+            fail('This should not be called if we unregistered this handler');
+        };
+
+        bus.registerHandler('test', handler);
+        bus.unregisterHandler('test', handler);
+
+        try {
+            bus.handle({type: 'test'}, () => {
+                fail('This should not be called if we unregistered the only handler for this type');
+            });
+        } catch (err) {
+            expect(err.message).toEqual('No handler is registered for message of type test');
+        }
+    });
 });

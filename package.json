@@ -1,19 +1,5 @@
 {
   "name": "madlines-simplebus",
-  "version": "1.1.0",
-  "scripts": {
-    "build": "tsc",
-    "test": "jest",
-    "build-and-test": "npm run build && npm test",
-    "dist": "npm run build && npm run _build-definitions && npm run _copy-files-to-dist && cd dist/ && npm publish",
-    "_build-definitions": "tsc -d",
-    "_copy-files-to-dist": "shx mkdir -p dist && shx cp src/*.js src/*.d.ts README.md package.json dist/"
-  },
-  "devDependencies": {
-    "@types/jest": "^19.2.2",
-    "jest": "^19.0.2",
-    "shx": "^0.3.1",
-    "typescript": "^2.7"
-  },
+  "version": "2.0.0-0",
   "repository": "github:madlines/simplebus"
 }

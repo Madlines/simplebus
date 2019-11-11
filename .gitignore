@@ -1,4 +1,9 @@
 /node_modules
-
+/src/**/*.js
+/src/**/*.d.ts
+/src/**/*.js.map
+/tests/**/*.js
+/tests/**/*.d.ts
+/tests/**/*.js.map
 /.history
 /.idea

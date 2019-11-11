@@ -1,0 +1,10 @@
+/node_modules
+/src/**/*.ts
+/src/**/*.js.map
+!/src/**/*.d.ts
+/tests
+/.eslintrc.json
+/.gitignore
+/tsconfig.json
+/.history
+/.idea

@@ -4,6 +4,7 @@
   "main": "src/index.js",
   "repository": "github:madlines/simplebus",
   "license": "MIT",
+  "description": "It allows you to easily setup Message Buses (like Command Buses and Evens Buses) with handlers and middleware, and run messages through them.",
   "scripts": {
     "lint": "eslint src/**/*.ts ./tests/**/*.ts",
     "test": "mocha --reporter nyan -r ts-node/register \"src/**/*.spec.ts\" \"tests/**/*.spec.ts\"",

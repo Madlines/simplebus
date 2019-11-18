@@ -1,8 +1,8 @@
 # SimpleBus by Madlines
 This library is inspired by PHP library called SimpleBus (https://github.com/SimpleBus).
 
-It allows you to setup Message Buses (like Command Buses and Evens Buses) with handlers and middlewares,
-and run messages through them.
+It allows you to easily setup Message Buses (like Command Buses and Evens Buses) with
+handlers and middleware, and run messages through them.
 
 # Message
 *Message* is a simple JS object that needs to have a type and, optionally, a payload, e.g.:

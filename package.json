@@ -3,6 +3,7 @@
   "version": "2.0.0-0",
   "main": "src/index.js",
   "repository": "github:madlines/simplebus",
+  "license": "MIT",
   "scripts": {
     "lint": "eslint src/**/*.ts ./tests/**/*.ts",
     "test": "mocha --reporter nyan -r ts-node/register \"src/**/*.spec.ts\" \"tests/**/*.spec.ts\"",
